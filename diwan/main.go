@@ -11,6 +11,7 @@ import (
 	"fmt"
 	"io/fs"
 	appbrand "localfirst/internal/brand"
+	"localfirst/internal/localai"
 	"log"
 	"net/http"
 	"os"
@@ -256,6 +257,13 @@ func main() {
 	// of the protected surface uses, so its 401 means exactly what the server
 	// means by "not authenticated" (product JWT OR CP session/app token).
 	protected.GET("/auth/me", authHandler.Me)
+	// Optional compute is available only on an explicitly local listener. Keep
+	// the existing auth middleware and do not share collaboration rate limits.
+	if localai.LoopbackListener(cfg.Server.Addr) {
+		ai := localai.New()
+		defer ai.Close()
+		protected.Any("/local-ai/*path", gin.WrapH(ai.Handler()))
+	}
 
 	// Standalone system surface: honest runtime facts for the self-hosted
 	// Settings/Admin UI, plus authenticated self-service password change.

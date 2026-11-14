@@ -9,6 +9,7 @@ import (
 	"fmt"
 	"io/fs"
 	appbrand "localfirst/internal/brand"
+	"localfirst/internal/localai"
 	"localfirst/internal/nearby"
 	"log"
 	"mime"
@@ -104,7 +105,7 @@ func assetHandler(assets fs.FS) http.Handler {
 		if err != nil {
 			first, _, _ := strings.Cut(name, "/")
 			switch first {
-			case "docs", "sheets", "slides", "whiteboards", "pdf", "settings":
+			case "docs", "sheets", "slides", "whiteboards", "pdf", "settings", "local-ai":
 				name = "index.html"
 				data, err = fs.ReadFile(assets, name)
 			}
@@ -149,6 +150,9 @@ func main() {
 	hub := nearby.NewHub()
 	defer hub.Stop()
 	mux := http.NewServeMux()
+	ai := localai.New()
+	defer ai.Close()
+	mux.Handle("/api/local-ai/", ai.Handler())
 	mux.Handle("/_nearby/", hub.Handler())
 	mux.Handle("/", assetHandler(assets))
 	server := &http.Server{Addr: *addr, Handler: mux, ReadHeaderTimeout: 5 * time.Second, IdleTimeout: 60 * time.Second, WriteTimeout: 30 * time.Second}
