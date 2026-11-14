@@ -24,7 +24,7 @@ for (const notice of ['LICENSE-MIT', 'LICENSE-APACHE', 'THIRD-PARTY-NOTICES.txt'
   await cp(join(repo, notice), join(output, notice))
 }
 await mkdir(join(output, 'docs'))
-for (const document of ['WINDOWS-BLUETOOTH.md', 'BLUETOOTH-INVITATION-FIX.md', 'BLUETOOTH-HOST-INVITATION-FIX.md', 'OFFLINE-NEARBY-PLAN.md', 'OFFLINE-NEARBY-PROGRESS.md', 'OFFLINE-USER-SAFETY-AUDIT.md']) {
+for (const document of ['WINDOWS-BLUETOOTH.md', 'BLUETOOTH-INVITATION-FIX.md', 'BLUETOOTH-HOST-INVITATION-FIX.md', 'OFFLINE-NEARBY-PLAN.md', 'OFFLINE-NEARBY-PROGRESS.md', 'OFFLINE-USER-SAFETY-AUDIT.md', 'LOCAL-AI-AUDIT.md', 'LOCAL-AI-SETUP.md']) {
   await cp(join(repo, 'docs', document), join(output, 'docs', document))
 }
 await writeFile(join(output, 'Start-LocalFirst-Offline.ps1'), `$ErrorActionPreference = 'Stop'
@@ -64,6 +64,8 @@ await writeFile(join(output, 'README.txt'), `LocalFirst offline workspace - Wind
 Extract the FULL ZIP on BOTH Windows laptops, then double-click Start-LocalFirst-Offline.cmd. No Node.js, Go installation, cloud login, or internet connection is needed. Keep the web directory beside localfirst-offline.exe. Running the launcher directly inside the ZIP will not work.
 
 Documents are stored in the current browser profile's IndexedDB for http://127.0.0.1:8765. Use the same browser/profile and port. Use Export workspace for a backup before clearing browser data. Do not use a private/incognito window for important documents.
+
+Local AI Cluster is optional and disabled on every restart. It connects only to an independently installed Exo service on supported hardware, directly through loopback or through an operator-managed SSH tunnel. This package includes no Exo runtime or model weights, starts no inference automatically, and does not use Bluetooth for AI. Native Windows Exo compute is unsupported by the audited upstream version. See docs/LOCAL-AI-SETUP.md and docs/LOCAL-AI-AUDIT.md for setup, resource boundaries and verification limits.
 
 Offline help explains saving and recovery. Restore backup adds new copies and keeps existing files. Restore currently accepts LocalFirst JSON backups up to 32 MiB. See docs/OFFLINE-USER-SAFETY-AUDIT.md for verified scenarios and remaining limits.
 

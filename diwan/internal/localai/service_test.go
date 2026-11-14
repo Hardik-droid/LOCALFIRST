@@ -55,7 +55,7 @@ func newFixture(t *testing.T, stream http.HandlerFunc) *fixture {
 			if r.URL.Query().Get("status") != "downloaded" {
 				t.Error("adapter queried non-downloaded models")
 			}
-			_, _ = fmt.Fprint(w, `{"object":"list","data":[{"id":"fixture/model","name":"fixture","storage_size_megabytes":1024}]}`)
+			_, _ = fmt.Fprint(w, `{"object":"list","data":[{"id":"fixture/model","name":"fixture","storage_size_megabytes":1024,"tasks":["TextGeneration"]}]}`)
 		default:
 			t.Errorf("unapproved upstream route: %s", r.URL.Path)
 			http.NotFound(w, r)
@@ -177,7 +177,7 @@ func TestPinnedExoContractTrustAndStreaming(t *testing.T) {
 	}
 }
 func TestAdmissionRejectsChangedIdentityMemoryAndUnknownNodes(t *testing.T) {
-	snapshot := Snapshot{Gateway: "g", Nodes: []Node{{ID: "n"}}, Models: []Model{{ID: "m"}}, Instances: []Instance{{Model: "m", Nodes: []string{"n"}, ResidentBytes: 1024}}}
+	snapshot := Snapshot{Gateway: "g", Nodes: []Node{{ID: "n"}}, Models: []Model{{ID: "m", Tasks: []string{"TextGeneration"}}}, Instances: []Instance{{Model: "m", Nodes: []string{"n"}, ResidentBytes: 1024}}}
 	policy := DefaultPolicy()
 	input := Completion{Model: "m"}
 	trusted := map[string]bool{"n": true}
@@ -199,6 +199,7 @@ func TestAdmissionRejectsChangedIdentityMemoryAndUnknownNodes(t *testing.T) {
 			s.Instances = []Instance{{Model: "m", Nodes: []string{"n"}, ResidentBytes: 1 << 50}}
 		}},
 		{"missing model", func(s *Snapshot) { s.Models = nil }},
+		{"unsupported model task", func(s *Snapshot) { s.Models = []Model{{ID: "m", Tasks: []string{"TextToImage"}}} }},
 	}
 	for _, c := range cases {
 		t.Run(c.name, func(t *testing.T) {

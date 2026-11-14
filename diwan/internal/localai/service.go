@@ -376,14 +376,22 @@ func admission(snapshot Snapshot, gateway string, trusted map[string]bool, input
 			return fmt.Errorf("Exo node %s is disconnected or stale", n.ID)
 		}
 	}
-	downloaded := false
+	downloaded, textGeneration := false, false
 	for _, m := range snapshot.Models {
 		if m.ID == input.Model {
 			downloaded = true
+			for _, task := range m.Tasks {
+				if task == "TextGeneration" {
+					textGeneration = true
+				}
+			}
 		}
 	}
 	if !downloaded {
 		return errors.New("select a downloaded model; this module never downloads weights")
+	}
+	if !textGeneration {
+		return errors.New("this model does not report text generation support; image generation is not supported by AI Chat")
 	}
 	found := false
 	for _, instance := range snapshot.Instances {

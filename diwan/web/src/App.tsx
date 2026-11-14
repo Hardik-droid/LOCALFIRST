@@ -19,6 +19,7 @@ const WhiteboardEditor = lazy(() => import('./apps/whiteboard/WhiteboardEditor')
 const PDFEditor = lazy(() => import('./apps/pdf/PDFEditor'))
 const SigningSetup = lazy(() => import('./apps/pdf/SigningSetup'))
 const Settings = lazy(() => import('./components/Settings'))
+const LocalAICluster = lazy(() => import('./apps/localai/LocalAICluster'))
 const SignView = lazy(() => import('./apps/pdf/SignView'))
 const EnvelopeDashboard = lazy(() => import('./components/EnvelopeDashboard'))
 const Verify = lazy(() => import('./components/Verify'))
@@ -131,6 +132,7 @@ export default function App() {
         <Route path="/envelopes" element={<EnvelopeDashboard />} />
         <Route path="/pdf/:id" element={<PDFEditor />} />
         <Route path="/settings" element={<Settings />} />
+        <Route path="/local-ai" element={<LocalAICluster />} />
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes></Suspense>
       <InstallPrompt />

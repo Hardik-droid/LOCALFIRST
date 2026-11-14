@@ -30,6 +30,7 @@ const APPS: { label: string; route: string; Icon: LucideIcon; tint: string }[] =
   { label: 'Presentations', route: '/slides', Icon: Presentation, tint: 'text-app-slides' },
   { label: 'Whiteboards', route: '/whiteboards', Icon: PenTool, tint: 'text-app-board' },
   { label: 'PDF Studio', route: '/pdf', Icon: FileSearch, tint: 'text-app-pdf' },
+  { label: 'Local AI Cluster', route: '/local-ai', Icon: LayoutGrid, tint: 'text-accent' },
 ]
 const viewPath = (view: WorkspaceView) => view === 'home' ? '/' : `/?view=${view}`
 const openSearch = () => window.dispatchEvent(new CustomEvent('localfirst:open-search'))
