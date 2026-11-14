@@ -36,7 +36,7 @@ test('opting into a local replica preserves existing text, later edits and a ful
   await expect(editor).toHaveAttribute('contenteditable', 'true')
   await expect(editor).toContainText('Existing important content must survive migration.')
   await editor.click()
-  await page.keyboard.press('Control+End')
+  await editor.press('Control+End')
   // Native selection updates can land after the key event under load. Verify
   // the intended insertion point before checking exact persisted text below.
   await expect.poll(() => editor.evaluate(element => {

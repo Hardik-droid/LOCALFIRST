@@ -89,6 +89,9 @@ for (const type of Object.keys(routes) as Array<keyof typeof routes>) {
       await host.goto(`/${routes[type]}/${id}?bluetooth=share`)
       const panel = host.getByRole('dialog', { name: 'Connect two Windows laptops' })
       await expect(panel).toBeVisible()
+      // A PDF opens asynchronously. Sharing correctly refuses a recovering
+      // file, so wait for the real renderer before testing the radio boundary.
+      if (type === 'pdf') await expect(host.locator('.lf-editor-pdf canvas').first()).toBeVisible()
       await panel.getByRole('button', { name: 'Share this document', exact: true }).click()
       await expect(panel.getByText('Authenticated Bluetooth link connected.', { exact: true })).toBeVisible()
       await test.step('Close the host sharing dialog', async () => {

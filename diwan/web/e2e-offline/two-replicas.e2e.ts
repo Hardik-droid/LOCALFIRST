@@ -71,7 +71,7 @@ test('two real editor copies preserve formatting and merge edits across disconne
     await panel.getByLabel('Paired laptop', { exact: true }).selectOption('001122334455')
     await panel.getByLabel('Host invitation', { exact: true }).fill(invitation)
     await panel.getByRole('button', { name: 'Connect over Bluetooth', exact: true }).click()
-    await panel.getByRole('button', { name: 'Open shared document', exact: true }).click()
+    await panel.getByRole('button', { name: 'Open shared file', exact: true }).click()
     await expect(panel).toHaveCount(0)
   }
   try {
